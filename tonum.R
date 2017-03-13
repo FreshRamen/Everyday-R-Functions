@@ -6,7 +6,8 @@ tonum <- function(x, decimals = F){
     x <- gsub("[^0-9]","",x)
     x <- as.numeric(x)
   } else {
-    x <- stri_extract_all_regex(x, "[0-9]|\\.")
+    x <- gsub("\\,","",x)
+    x <- stri_extract_all_regex(x, "[0-9]*\\.[0-9]{0,2}")
     x <- unlist(x)
     x <- stri_flatten(x)
     x <- as.numeric(x)
