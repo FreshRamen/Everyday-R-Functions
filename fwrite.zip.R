@@ -1,4 +1,4 @@
-fwrite.zip <- function(x, file, ...) {
+fwrite.zip <- function(x, file, path = getwd(), ...) {
 	## Function writes data to a zipped csv file, requires data.table package
 	# x -- data.table object to be written to CSV, then zipped
 	# file -- File name of the csv file
@@ -14,8 +14,8 @@ fwrite.zip <- function(x, file, ...) {
   } else {
     csvFile <- paste0(paste0(file,".csv"))
     zipFile <- paste0(csvFile,".zip")
-  }   
-	oldPath <- getwd() 	# Store old path
+  }
+	oldPath <- path	# Store old path
 	## Create temporary directory, or flush if exists
 	if (!file.exists(tempdir())) {
     dir.create(tempdir())
