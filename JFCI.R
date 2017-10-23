@@ -12,3 +12,18 @@ JFCI <- function(pos_words, neg_words){
 		return( 0 )
 	}
 }
+
+JFCI_vec <- function(Sentiments, ...){
+	# This function computes the Janis-Fadner Coefficient of Imbalance, for sentiment analysis.
+	# pos_words and neg_words are one-dimensional numeric vectors, indicating the number of 
+	# positive and negative words in a text, respectively.
+	p <- sum(Sentiments>0, ...)
+	n <- sum(Sentiments<0, ...)
+	if (p > n) {
+		return( (p^2 - p * n) / (p + n)^2 )
+	} else if (p < n) {
+		return( (p * n - n^2) / (p + n)^2 )
+	} else {
+		return( 0 )
+	}
+}
