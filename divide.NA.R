@@ -1,1 +1,1 @@
- `%/na%` <- function(x,y) {ifelse( y == 0, NA, x / y )}
+ `%/na%` <- function(x, y) {ifelse(y == 0, NA, x / y)}

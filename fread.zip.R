@@ -1,18 +1,26 @@
 fread.zip <- function(zipfile, ...) {
   # Function reads data from a zipped csv file. Requires package data.table
-  ## Flush or create a temporary directory
-  if (!file.exists(tempdir())) {dir.create(tempdir())
-  } else {file.remove(list.files(tempdir(), full = T, pattern = "*.csv"))
+  
+  # The zipfile should be named: file_name.csv.zip, containing a single csv which is named file_name.csv
+  
+  # Create a temporary directory, flush if exists
+  temp_dir <- tempdir()
+  if (!file.exists(temp_dir)) {dir.create(temp_dir)}
+  
+  # Extract csvfile name (zipfile can be full path)
+  csvfile <- substr(zipfile, 1, nchar(zipfile)-4)
+  csvfile <- unlist(stri_split_fixed(csvfile, "/"))
+  csvfile <- csvfile[length(csvfile)]
+  csvfile <- file.path(tempdir(), csvfile) # full path to csv file
+  
+  # Check if file is already unzipped, if not, unzip the file into tempdir
+  if (!file.exists(csvfile)){
+    unzip(zipfile, exdir=tempdir())    
   }
-  ## Unzip the file into the dir
-  unzip(zipfile, exdir=tempdir())
-  ## Get the files into the dir
-  file <- list.files(tempdir(), pattern = "*.csv", full.names = T)
-  ## Throw an error if there's more than one
-  if(length(file)>1) stop("More than one data file inside zip")
-  ## Read the file
-  fread(file,
-      na.strings = c("","NA"), # read empty strings as NA
+
+  # Read the file
+  fread(csvfile,
+      # na.strings = c("","NA"), # read empty strings as NA
 	  ...
     )
 }
