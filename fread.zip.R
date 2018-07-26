@@ -1,7 +1,7 @@
-fread.zip <- function(zipfile, ...) {
+fread.zip <- function(zipfile, na.strings=c("","NA"), ...) {
   # Function reads data from a zipped csv file. Requires package data.table
   
-  # The zipfile should be named: file_name.csv.zip, containing a single csv which is named file_name.csv
+  # To speed things up, the file will not be unzipped twice in the same R session. This has the downside that the name of the zipfile and the containing csv files need to follow the eact pattern: filename.csv filename.csv.zip
   
   # Create a temporary directory, flush if exists
   temp_dir <- tempdir()
@@ -20,7 +20,7 @@ fread.zip <- function(zipfile, ...) {
 
   # Read the file
   fread(csvfile,
-      # na.strings = c("","NA"), # read empty strings as NA
+      na.strings = na.strings, # read empty strings as NA
 	  ...
     )
 }
