@@ -11,7 +11,7 @@ fread.zip <- function(zipfile, na.strings=c("","NA"), ...) {
   csvfile <- substr(zipfile, 1, nchar(zipfile)-4)
   csvfile <- unlist(stri_split_fixed(csvfile, "/"))
   csvfile <- csvfile[length(csvfile)]
-  csvfile <- file.path(tempdir(), csvfile) # full path to csv file
+  csvfile <- file.path(temp_dir, csvfile) # full path to csv file
   
   # Check if file is already unzipped, if not, unzip the file into tempdir
   if (!file.exists(csvfile)){

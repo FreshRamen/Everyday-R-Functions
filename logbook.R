@@ -26,8 +26,13 @@ logbook.header <- function(title="Enter title here"){
     , collapse=FALSE)
 }
 
-logbook.write <- function(logfile = "logbook", file="log.md", path = getwd(), PDF = F){
-  log_out <- file.path(path,file)
+logbook.write <- function(logfile = "logbook", file="log.md", path = NA, PDF = F){
+  if (!is.na(path)) {
+    log_out <- file.path(path,file)    
+  } else {
+    log_out <- file
+  }
+
   if (length(logfile) == 1) logfile <<- get(logfile)
   cat(logfile, sep = "\n", file = log_out)
   if (PDF == T) {
