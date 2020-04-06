@@ -4,9 +4,9 @@ multi_reg <- function(..., data=DT, hc="HC1") {
   # as an html stargazer_file
   
   # Regression equations
-  if (!class(list())=="list") {
+  # if (!class(list())=="list") {
     reg_eqs <- list(...) # List of all regression equations defined above
-  }
+  # }
 
   # Names
   # These vectors contain names for things computed for each equation

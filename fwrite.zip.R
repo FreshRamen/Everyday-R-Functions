@@ -1,33 +1,36 @@
-fwrite.zip <- function(x, file, path = getwd(), ...) {
+
+fwrite.zip <- function(x, file, ...) {
 	## Function writes data to a zipped csv file, requires data.table package
 	# x -- data.table object to be written to CSV, then zipped
 	# file -- File name of the csv file
 	# ... -- Other options passed to "fwrite()"
-  require(data.table)
-	## Parse file name
-  if (substr(file,nchar(file)-7,nchar(file)) == ".csv.zip") {
-    csvFile <- substr(file,1,nchar(file)-4)
-    zipFile <- file
-  } else if (substr(file,nchar(file)-3,nchar(file)) == ".csv") {
-    csvFile <- file
-    zipFile <- paste0(csvFile,".zip")
-  } else {
-    csvFile <- paste0(paste0(file,".csv"))
-    zipFile <- paste0(csvFile,".zip")
-  }
-	oldPath <- path	# Store old path
-	## Create temporary directory, or flush if exists
+	require(data.table)
+
+	# Parse file name (without path)
+	destFile <- file
+	zipFile <- tail(stri_split_fixed(destFile, "/")[[1]], 1)
+	csvFile <- substr(zipFile, 1, nchar(zipFile) - 4)
+
+	# Create temporary directory
 	if (!file.exists(tempdir())) {
-    dir.create(tempdir())
-  } else {
-    file.remove(list.files(tempdir(), full = T, pattern = "*.csv"))
-  }	
-	## Write file to tempdir, zip and move to oldPath
-  setwd(tempdir())
+		dir.create(tempdir())
+	}
+
+	# Set working directory to tempdir (otherwise zip() includes all the folders...)
+	oldwd <- getwd()
+	setwd(tempdir())
+	
+	# Write file to tempdir
 	fwrite(x, file = csvFile, ...) 
-	zip(zipFile, files = csvFile)
-	file.copy(zipFile, file.path(oldPath,zipFile), overwrite = T)
-	file.remove(csvFile,zipFile)
-	## Return to old path
-	setwd(oldPath)
+	
+	# Zip tempfile
+	zip(destFile, files = csvFile)
+		
+	# Remove csv file
+	quietly <- file.remove(csvFile)
+	
+	# Change back working directory
+	setwd(oldwd)
 }
+	
+	

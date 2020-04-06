@@ -4,7 +4,7 @@ plt.raster_cor <- function(columns, data) {
   # Section: Create a tiled correlation plot (geom_tile())
   
   cols <- sort(columns)
-  thecor <- DT[, round(cor(.SD, method="pearson", use="pairwise.complete.obs"), 3), .SDcols=cols] # Create correlation table
+  thecor <- data[, round(cor(.SD, method="pearson", use="pairwise.complete.obs"), 3), .SDcols=cols] # Create correlation table
   thecor[upper.tri(thecor)] <- NA # Remove lower triangle
   
   thecor <- as.data.table(thecor)
@@ -12,8 +12,32 @@ plt.raster_cor <- function(columns, data) {
   
   thecor <- melt(thecor, measure.vars=cols, variable.factor=FALSE, id.vars="Variable")
   thecor <- thecor[!is.na(value)]
-
-  plt <- ggplot(thecor, aes(Variable, variable)) + geom_tile(data=thecor, aes(fill=value), color="white") + scale_fill_gradient2(low="blue", high="red", mid="white", midpoint=0, limit=c(-1,1), name=element_blank()) + theme(axis.title.x = element_blank(), axis.title.y = element_blank()) + ggtitle("Correlation (Pearson, Pairwise)") + coord_equal() + geom_text(aes(label=value))# Create plot object
+  
+  # Create plot object
+  plt <- ggplot(thecor, 
+    aes(Variable, variable)) + 
+    ggtitle("Correlation (Pearson, Pairwise)") + 
+    geom_tile(
+      data=thecor, 
+      aes(fill=value), 
+      color="white"
+    ) + 
+    scale_fill_gradient2(
+      low="blue", 
+      high="red", 
+      mid="white", 
+      midpoint=0, 
+      limit=c(-1,1), 
+      name=element_blank()
+    ) + 
+    theme(
+      axis.title.x = element_blank(), 
+      axis.title.y = element_blank(),
+      axis.text.x = element_text(angle = 90, hjust = 1)
+    ) + 
+    coord_equal() + 
+    geom_text(aes(label=value)
+  )
   
   return(plt)
 }
